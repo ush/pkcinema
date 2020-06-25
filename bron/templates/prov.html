@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+	{% load staticfiles %}
+	<input type = "password" id = "pass"/>
+	<input type = "button" id = "send" value = "Отправить"/>
+	<input type = "hidden" id = "merop" value = "{{merop}}"/>
+	<input type = "hidden" id = "email" value = "{{email}}"/>
+	<input type = "hidden" id = "name" value = "{{name}}"/>
+	<input type = "hidden" id = "place" value = "{{place}}"/>
+	
+	<script type="text/javascript">
+		document.getElementById("send").addEventListener("click", Sender);
+        function Sender() 
+        {
+            var SrvRet="";
+                Object2Send={Command: "ConfirmBooking",
+                    password: document.getElementById("pass").value,
+                    name: document.getElementById("name").value,
+                    email: document.getElementById("email").value,
+                    mero: document.getElementById("merop").value, 
+                    place: document.getElementById("place").value
+                }
+                $.ajax({url: 'query',
+                    type: 'GET',
+                    data: Object2Send,
+                    async: false,
+                    success: function(data){
+                        SrvRet = data;
+                    }
+                });
+                if (SrvRet == "каеф")
+                {
+                    swal({
+                    title: "Поздравляем!",
+                    text: "Билет подтверждён!",
+                    icon: "success",
+                    })
+                    .then((value) => {
+                    location.reload(true);
+                    });
+                }
+                else if (SrvRet == "ошибка")
+                {
+                    swal({
+                        title: "Ошибка!",
+                        text: "Что-то пошло не так((",
+                        icon: "error",
+                    })
+                    .then((value) => {
+                    location.reload(true);
+                    });
+                }
+        }
+	</script>
+	
+	<!-- jQuery -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'js/small-business.js' %}"></script>
+
+    <!-- Smooth Scroll -->
+    <script src="{% static 'js/SmoothScroll.js' %}"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</html>
